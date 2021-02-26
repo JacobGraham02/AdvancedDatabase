@@ -22,8 +22,8 @@ Create a query that lists Last name,  Salary, Salary increased by 3 percent, Mon
 Limit the result to employees whose salary * 1.05, is less than or equal to $55,000 and their LASTNAME contains a N .  Sort the list by annual salary desc and last name . 
 (Should get 13 rows) (Tables used EMPLOYEE)
 */
-SELECT LASTNAME, SALARY, SALARY * 1.03 AS 'Salary increased by 3 percent', 
-(salary / 12) * 1.05 AS 'Monthly salary increased by 5 percent'
+SELECT LASTNAME, SALARY, ROUND((SALARY * 1.03),2) AS 'Salary increased by 3 percent', 
+ROUND(((salary / 12) * 1.05), 2) AS 'Monthly salary increased by 5 percent'
 FROM employee WHERE salary <= 55000 AND lastname LIKE "%N%"
 ORDER BY salary DESC, lastname;
 
@@ -51,8 +51,9 @@ SELECT workdept, empno, salary
 FROM employee
 WHERE workdept='D11'
 UNION
-SELECT workdept, empno, SUM(salary) AS 'Summed salaries'
-FROM employee;
+SELECT workdept, empno = null, SUM(salary) AS 'Summed salaries'
+FROM employee
+ORDER BY salary;
 
 /*
 Question 4  (15 marks)
@@ -61,7 +62,7 @@ Get the employees that have the same Job and Education level  as the employees f
 (hint sub-select from employee    ie (job, edlevel ) =    ). Sort the listing by highest salary first.  
 (Should get 4 rows) (Tables used EMPLOYEE)
 */
-SELECT lastname, edlevel, job, 	YEAR("2001-01-1") - YEAR(hiredate) AS 'Years worked', salary 
+SELECT lastname, edlevel, job, YEAR("2001-01-01") - YEAR(hiredate) AS 'Years worked', salary 
 FROM employee 
 WHERE (job, edlevel) IN 
 (SELECT job, edlevel FROM employee WHERE firstnme LIKE 'R%' 
@@ -123,7 +124,7 @@ Question 8 (15 marks)
 Create the DDL for the tables.png file included in the Assignment 1 folder:
  */
 CREATE TABLE Products (
-ProductID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+ProductID INT NOT NULL PRIMARY KEY,
 ProductName VARCHAR(50) NOT NULL,
 SupplierID INT NOT NULL,
 CategoryID INT NOT NULL,
@@ -136,7 +137,7 @@ Discontinued BOOLEAN NOT NULL
 );
 
 CREATE TABLE Order_Details (
-OrderID INT NOT NULL AUTO_INCREMENT,
+OrderID INT NOT NULL,
 ProductID INT NOT NULL,
 UnitPrice DECIMAL(10, 2) NOT NULL,
 Quantity MEDIUMINT UNSIGNED NOT NULL,
@@ -145,27 +146,27 @@ PRIMARY KEY (OrderID, ProductID)
 );
 
 CREATE TABLE Orders (
-OrderID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+OrderID INT NOT NULL PRIMARY KEY,
 CustomerID INT NOT NULL,
 EmployeeID INT NOT NULL,
 OrderDate DATETIME NOT NULL,
 RequiredDate DATETIME NOT NULL,
 ShippedDate DATETIME NOT NULL,
-ShipVia VARCHAR(50) NOT NULL,
-Freight VARCHAR(20) NOT NULL,
-ShipName VARCHAR(20) NOT NULL,
-ShipAddress VARCHAR(20) NOT NULL,
-ShipCity VARCHAR(20) NOT NULL,
-ShipRegion VARCHAR(20) NOT NULL,
-ShipPostalCode VARCHAR(20) NOT NULL,
-ShipCountry VARCHAR(20) NOT NULL
+ShipVia VARCHAR(100) NOT NULL,
+Freight VARCHAR(100) NOT NULL,
+ShipName VARCHAR(100) NOT NULL,
+ShipAddress VARCHAR(100) NOT NULL,
+ShipCity VARCHAR(100) NOT NULL,
+ShipRegion VARCHAR(100) NOT NULL,
+ShipPostalCode VARCHAR(10) NOT NULL,
+ShipCountry VARCHAR(100) NOT NULL
 );
 
 ALTER TABLE Order_Details
-ADD FOREIGN KEY (ProductID) REFERENCES Orders(OrderID);
+ADD FOREIGN KEY (OrderID) REFERENCES Orders(OrderID);
 
 ALTER TABLE Order_Details
-ADD FOREIGN KEY (OrderID) REFERENCES Products(ProductID);
+ADD FOREIGN KEY (ProductID) REFERENCES Products(ProductID);
 
 
 
