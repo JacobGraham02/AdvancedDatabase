@@ -1,5 +1,5 @@
 /*
-Database provide a rich and flexible assortment of data types. Examples are Integer, Char, and Date. Also incldues the ability to create user defined datatypes (UDT's) 
+Databases provide a rich and flexible assortment of data types. Examples are Integer, Char, and Date. Also incldues the ability to create user defined datatypes (UDT's) 
 so that you can create complex, non-traditional data types appropriate for many situations. 
 4 categories of built-in datatypes: 
 UDT's are categorized as distinct, structured, or referenced
@@ -69,18 +69,18 @@ ALTERing a table
         
 	The following changes the datatype and nullability of a column
 		ALTER TABLE BOOKS 
-        ALTER BOOKNAME SET DATA TYPE VARCHAR(200) 
-        ALTER ISBN SET NOT NULL
+        ALTER BOOKNAME SET DATA TYPE VARCHAR(200) - Changing datatype
+        ALTER ISBN SET NOT NULL - Changing nullability
         
 	You cannot change a table's tablespace, order of columns, or datatype of some columns, without saving the table data, dropping it, and recreating it.
     (For some reason the review document specifices autoincrement as 'GENERATED ALWAYS AS IDENTITY')
     Example you should know:
 		CREATE TABLE BOOKS (
-			BOOKID INTEGER NOT NULL AUTOINCREMENT,
-            BOOKNAME VARCHAR(100) WITH DEFAULT 'TBD',
+			BOOKID INTEGER NOT NULL AUTOINCREMENT, - Makes the column auto increment numbers
+            BOOKNAME VARCHAR(100) WITH DEFAULT 'TBD', - Generates a default value
             ISBN CHAR(10)
             );
-	GENERATED ALWAYS option to have databases calculate the value of a column automatically. The following defines a table AUTHORS, with columns FICTIONBOOKS and NONFICTIONBOOKS that
+	GENERATED ALWAYS AS constraint to have databases calculate the value of a column automatically. The following defines a table AUTHORS, with columns FICTIONBOOKS and NONFICTIONBOOKS that
     hold counts for fiction and nonfiction books, respectively. TOTALBOOKS will always be calculated now by adding the FICTIONBOOKS and NONFICTIONBOOKS columns.
 		CREATE TABLE AUTHORS (AUTHORID INTEGER NOT NULL PRIMARY KEY,
 								LNAME VARCHAR(100),
@@ -100,6 +100,7 @@ Constraints
                                     );
 			A special name is assigned to the constraint, in this case BOOKISBN. Can only define 1 primary key, but multiple constraints for unique. You cannot use both
             PRIMARY KEY and UNIQUE on the same column. 
+            
 		Referential constraints:
 			Define relationships between tables and ensure those relationships remain valid. For example, defining 2 primary keys on a common column in both the BOOKS and
             AUTHORS table, and linking them with a foreign key.
@@ -138,13 +139,14 @@ Constraints
 				
                 After defining this view, there are entries for it in SYSCAT.VIEWS, SYSCAT.VIEWDEP, and SYSCAT.TABLES
                 
-                CREATE VIEW statement specifies column names which differ from those in the base table. CREATE VIEW MYBOOKVIEW (TITLE,TYPE) AS SELECT BOOKNAME, BOOKTYPE FROM BOOKS
+                CREATE VIEW statement specifies column names which differ from those in the base table. 
+					CREATE VIEW MYBOOKVIEW (TITLE,TYPE) AS SELECT BOOKNAME, BOOKTYPE FROM BOOKS
 					The above creates a view which contains 2 columns, TITLE = BOOKNAME, TYPE = BOOKTYPE. 
 				DROP VIEW statement is used to drop a view. If you drop a table or another view which a view is based on, it is still defined in the database, but is rendered
 				inoperative. You cannot directly modify a view. You must drop and recreate it. Use ALTER VIEW to modify only reference types. 
                 
                 A view can be defined as a read-only or updateable view. If you do not want a user to insert rows that are outside the scope of the view, you can define the view using
-                WITH CHECK OPTION. This tells the DMBS th check that statements using the view satisfy the conditions of the view. 
+                WITH CHECK OPTION. This tells the DBMS to check that statements using the view satisfy the conditions of the view. 
 					The following defines a view using WITH CHECK OPTION
 						CREATE VIEW NONFICTIONBOOKS AS
 							SELECT * FROM BOOKS WHERE BOOKTYPE = 'N'

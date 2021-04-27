@@ -15,6 +15,7 @@
 
 */
 USE sample;
+
 /*Create Table, Index and View Questions:
 
 Question 1 (15 marks)
